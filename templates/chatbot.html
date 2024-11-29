@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}IA ChatBot{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="sidebar">
+        <h2>IA ChatBot</h2>
+        <button class="new-chat-btn" id="newChatBtn">Nouveau chat</button>
+        <div class="chat-history">
+            <h3>Conversations récentes</h3>
+            <ul id="chatHistoryList">
+                <!-- Les conversations seront ajoutées ici dynamiquement par JavaScript -->
+            </ul>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="conversation-themes">
+            <div class="theme-buttons">
+                <button class="theme-btn" data-theme="general">Général</button>
+                <button class="theme-btn" data-theme="education">Éducation</button>
+                <button class="theme-btn" data-theme="sport">Sport</button>
+                <button class="theme-btn" data-theme="technology">Tech</button>
+                <button class="theme-btn" data-theme="health">Santé</button>
+            </div>
+        </div>
+        <div class="messages-box" id="messagesBox">
+            <div class="message ai-message">
+                <div class="message-icon">AI</div>
+                <div class="message-text">
+                    Bonjour ! Choisissez un thème de conversation ou posez-moi directement une question.
+                </div>
+            </div>
+        </div>
+        <form class="message-form" id="messageForm">
+            {% csrf_token %}
+            <input type="text" class="message-input" id="messageInput" placeholder="Tapez votre message ici..." name="message">
+            <button type="submit" class="btn-send">➤</button>
+        </form>
+    </div>
+</div>
+
+<div class="user-menu">
+    <button class="user-menu-btn" id="userMenuBtn" data-username="{{ user_full_name }}">
+        <span class="user-initials">{{ user_initials }}</span>
+    </button>
+    <div class="user-menu-content" id="userMenuContent">
+        <div class="user-info">{{ user_full_name }}</div>
+        <a href="#" id="clearConversations">Effacer les conversations</a>
+        <a href="#" id="toggleTheme">Changer de thème</a>
+        <a href="{% url 'logout' %}">Déconnexion</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const chatsData = JSON.parse('{{ chats_data|escapejs }}');
+    const csrfToken = "{{ csrf_token }}";
+    const userInitials = "{{ user_initials }}";
+</script>
+<script src="{% static 'js/chatbot.js' %}"></script>
+{% endblock %}
